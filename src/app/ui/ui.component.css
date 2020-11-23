@@ -1,0 +1,40 @@
+.bigInput {
+  width: 180px;
+}
+.smallInput {
+  width: 25px;
+}
+
+.addButton {
+  height: 20px;
+  width: 30px;
+  padding: 2px 2px;
+}
+.randomButton {
+  height: 46px;
+  width: 48px;
+  padding: 2px 2px;
+}
+.searchButton {
+  height: 20px;
+  width: 133px;
+  padding: 2px 2px;
+}
+.outer{
+  width:100%;
+}
+.left {
+  min-width: 250px;
+  position: fixed;
+}
+
+.right {
+    height: 100%;
+    right: 0;
+    top: 0%;
+    left: 250px;
+    position: fixed;
+    overflow-x: scroll;
+    overflow-y: scroll;
+    text-align: center;
+}

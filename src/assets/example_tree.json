@@ -6,6 +6,7 @@
 	"Nodes":[
 		{
 			"UUID":  "ef42be01-a2dd-4280-8fef-5ea8b9d93e6e" ,
+      "Highlighted": false,
 			"Elements": [
 				{
 					"Value": 10,
@@ -16,7 +17,8 @@
 		},
 		{
 			"UUID":  "15e69f23-1184-4233-bc98-b6310a46b362" ,
-			"Elements": [
+      "Highlighted": true,
+      "Elements": [
 				{
 					"Value": 3,
 					"Left": "9edfd897-91fc-43cb-b9b0-b4698a94f57c",
@@ -31,7 +33,8 @@
 		},
 		{
 			"UUID": "d8524cc8-5d3a-4a01-9f6a-8d606725b04b",
-			"Elements": [
+      "Highlighted": false,
+      "Elements": [
 				{
 					"Value": 13,
 					"Left": "f3005a58-2cbf-4cb0-842c-f571e906ed5e",
@@ -46,7 +49,8 @@
 		},
 		{
 			"UUID": "9edfd897-91fc-43cb-b9b0-b4698a94f57c",
-			"Elements": [
+      "Highlighted": false,
+      "Elements": [
 				{
 					"Value": 1,
 					"Left": null,
@@ -61,7 +65,8 @@
 		},
 		{
 			"UUID": "7abd7376-6b00-43b8-b349-a4778a92c31a",
-			"Elements": [
+      "Highlighted": false,
+      "Elements": [
 				{
 					"Value": 4,
 					"Left": null,
@@ -81,7 +86,8 @@
 		},
 		{
 			"UUID": "af5710ba-ccee-4b80-be95-ee256eb9c7be",
-			"Elements": [
+      "Highlighted": false,
+      "Elements": [
 				{
 					"Value": 8,
 					"Left": null,
@@ -96,7 +102,8 @@
 		},
 		{
 			"UUID": "f3005a58-2cbf-4cb0-842c-f571e906ed5e",
-			"Elements": [
+      "Highlighted": false,
+      "Elements": [
 				{
 					"Value": 11,
 					"Left": null,
@@ -111,7 +118,8 @@
 		},
 		{
 			"UUID": "e6d61b25-dc60-48d0-a84f-116bde034a04",
-			"Elements": [
+      "Highlighted": false,
+      "Elements": [
 				{
 					"Value": 14,
 					"Left": null,
@@ -136,7 +144,8 @@
 		},
 		{
 			"UUID":  "a5f0aeae-53f1-4aa7-8a9e-c7db2d18831e",
-			"Elements": [
+      "Highlighted": false,
+      "Elements": [
 				{
 					"Value": 20,
 					"Left": null,

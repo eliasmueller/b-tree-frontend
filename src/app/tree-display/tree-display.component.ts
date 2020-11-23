@@ -73,7 +73,12 @@ export class TreeDisplayComponent implements OnInit, OnChanges {
       for (let j = 0; j < this.numberNodesInRow[i]; j++) {
         const x = (j * width) + (j + 1) * (((this.canvasWidth) - width * this.numberNodesInRow[i]) / (this.numberNodesInRow[i] + 1));
         const y = i * 130 + 50;
-        this.ctx.fillStyle = '#369';
+        if ( this.bTree.Nodes[nodeIndex].Highlighted === false ) {
+          this.ctx.fillStyle = '#369';
+        } else {
+          this.ctx.fillStyle = '#42d232';
+        }
+
         this.ctx.fillRect(x, y, width, 30);
 
         this.nodeXPositionLookupTable[nodeIndex] = x;

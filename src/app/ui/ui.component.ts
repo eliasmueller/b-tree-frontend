@@ -16,9 +16,16 @@ import {Tree} from '../tree';
 })
 export class UiComponent implements OnInit {
 
-  currentTree: Tree;
+  public currentTree: Tree;
 
-  public addElements(): Observable<any>{
+  constructor(private httpClient: HttpClient) { }
+
+  ngOnInit(): void {
+    // TODO REMOVE
+    this.currentTree = plainToClass(Tree, ExampleTree);
+  }
+
+  public addElements(): Observable<any> {
     const answer = this.httpClient.get(`https://newsapi.org/v2/top-headlines?sources=techcrunch&apiKey=""`);
     answer.subscribe((data) => {
       // this.articles = data['articles'];
@@ -27,13 +34,30 @@ export class UiComponent implements OnInit {
     return answer;
   }
 
-  constructor(private httpClient: HttpClient) { }
-
-  ngOnInit(): void {
-    this.currentTree = plainToClass(Tree, ExampleTree);
-
+  public deleteElements(): Observable<any> {
+    const answer = this.httpClient.get(`https://newsapi.org/v2/top-headlines?sources=techcrunch&apiKey=""`);
+    return answer;
   }
 
+  public searchElement(): Observable<any> {
+    const answer = this.httpClient.get(`https://newsapi.org/v2/top-headlines?sources=techcrunch&apiKey=""`);
+    return answer;
+  }
+
+  public addRandomElements(): Observable<any> {
+    const answer = this.httpClient.get(`https://newsapi.org/v2/top-headlines?sources=techcrunch&apiKey=""`);
+    return answer;
+  }
+
+  public changeOrder(): Observable<any> {
+    const answer = this.httpClient.get(`https://newsapi.org/v2/top-headlines?sources=techcrunch&apiKey=""`);
+    return answer;
+  }
+
+  /**
+   * Changes the currentTree Attribute.
+   * @param tree: The new Tree.
+   */
   changeTree(tree: Tree): void {
     this.currentTree = tree;
   }

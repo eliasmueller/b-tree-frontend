@@ -1,2 +1,39 @@
-<button (click)="addElements()">Add Elements </button>
-<app-tree-display [childTree]="currentTree"></app-tree-display>
+<div class="left" xmlns="http://www.w3.org/1999/html">
+  <div>
+    <input id="numberInput" class="bigInput" type="text" value="" placeholder="1, 2, ...">
+    <div>
+      <button id="addButton" class="addButton" (click)="addElements()">+</button>
+      <button id="removeButton" (click)="deleteElements()" class="addButton">-</button>
+      <button id="searchButton" (click)="searchElement()" class="searchButton">Suchen</button>
+    </div>
+  </div>
+
+  <br/>
+
+  <div>
+    <input id="minRandom" type="text" class="smallInput" value="" placeholder="Min">
+    <input id="maxRandom" type="text" class="smallInput" value="" placeholder="Anz.">
+    <input id="numberRandom" type="text" class="smallInput" value="" placeholder="Max">
+    <button id="addRandomButton" class="randomButton" (click)="addRandomElements()">+ Zfll.</button>
+  </div>
+
+  <br/>
+
+  <div>
+    <input type="text" class="smallInput" value="" placeholder={{currentTree.Order}}>
+    <button id="changeOrderButton" (click)="changeOrder()">Ordnung Verändern</button>
+  </div>
+
+  <br/>
+  <textarea class="outPut" value="" rows="5" placeholder="> Ausgabe"></textarea>
+  <div>
+
+  </div>
+  <br/>
+
+</div>
+<div class="outer">
+  <div class="right">
+    <app-tree-display [childTree]="currentTree"></app-tree-display>
+  </div>
+</div>

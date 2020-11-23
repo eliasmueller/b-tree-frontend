@@ -1,10 +1,7 @@
-import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
-import * as uuid from 'uuid';
+import {Component, ElementRef, OnInit, ViewChild, Input, OnChanges, SimpleChanges} from '@angular/core';
 import {Tree} from '../tree';
 import {Node} from '../node';
-import {plainToClass} from 'class-transformer';
-import ExampleTree from '../../assets/example_tree.json';
-
+import { UiComponent } from '../ui/ui.component';
 
 @Component({
   selector: 'app-tree-display',
@@ -15,11 +12,13 @@ import ExampleTree from '../../assets/example_tree.json';
  /*
  * This class is responsible for transforming the b-tree from the JSON-Format to a visual representation in HTML using the HTML canvas.
  * */
-export class TreeDisplayComponent implements OnInit {
+export class TreeDisplayComponent implements OnInit, OnChanges {
 
 
   @ViewChild('canvas', {static: true})
   canvas: ElementRef<HTMLCanvasElement>;
+
+  @Input() childTree: Tree;
 
   private bTree: Tree;
   canvasWidth: number;
@@ -30,18 +29,22 @@ export class TreeDisplayComponent implements OnInit {
   private nodeYPositionLookupTable: number[] = [];
   private ctx: CanvasRenderingContext2D;
 
-  constructor() {
+  constructor( private data: UiComponent) {
   }
 
   /*
-  * On init the tree gets transformed to a Tree-Object, the canvas gets initialized and the draw-method gets called.
-  * */
-  async ngOnInit(): Promise<void> {
-    this.bTree = plainToClass(Tree, ExampleTree);
-    await this.initCanvas();
-    await this.getTreeMetrics();
-    await this.drawTree();
+    * On change of the tree the tree gets transformed to a Tree-Object, the canvas gets initialized and the draw-method gets called.
+    * */
+  async ngOnChanges(changes: SimpleChanges): Promise<void> {
+    if ( this.childTree !=  null ) {
+      this.bTree = this.childTree;
+      await this.initCanvas();
+      await this.getTreeMetrics();
+      await this.drawTree();
+    }
   }
+
+  async ngOnInit(): Promise<void> {}
 
   /*
   * This method initializes the canvas based on the number of elements in the tree.

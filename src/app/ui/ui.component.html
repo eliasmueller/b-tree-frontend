@@ -1,39 +1,65 @@
-<div class="left" xmlns="http://www.w3.org/1999/html">
-  <div>
-    <input id="numberInput" class="bigInput" type="text" value="" placeholder="1, 2, ...">
+<ng-template #blur>
+  <div class = "fadeMe">
+    <mat-spinner color="accent" class="activityIndicator"></mat-spinner>
+  </div>
+</ng-template>
+<div *ngIf="load == false; else blur">
+</div>
+  <div class="left" xmlns="http://www.w3.org/1999/html">
     <div>
-      <button id="addButton" class="addButton" (click)="addElements()">+</button>
-      <button id="removeButton" (click)="deleteElements()" class="addButton">-</button>
-      <button id="searchButton" (click)="searchElement()" class="searchButton">Suchen</button>
+      <input id="numberInput" [(ngModel)]="numberListInput" class="bigInput" type="text" value=""
+             placeholder="1, 2, ...">
+      <div>
+        <button id="addButton" class="addButton" (click)="addElements()">+</button>
+        <button id="removeButton" (click)="deleteElements()" class="addButton">-</button>
+        <button id="searchButton" (click)="searchElement()" class="searchButton">Suchen</button>
+      </div>
+    </div>
+
+    <br/>
+
+    <div>
+      <input id="minRandom" [(ngModel)]="minRandomInput" type="text" class="smallInput" value="" placeholder="Min">
+      <input id="maxRandom" [(ngModel)]="maxRandomInput" type="text" class="smallInput" value="" placeholder="Anz.">
+      <input id="numberRandom" [(ngModel)]="numberRandomInput" type="text" class="smallInput" value=""
+             placeholder="Max">
+      <button id="addRandomButton" class="randomButton" (click)="addRandomElements()">+ Zfll.</button>
+    </div>
+
+    <br/>
+
+    <div>
+      <input type="text" id="orderInput" [(ngModel)]="orderInput" class="smallInput" value=""
+             placeholder={{currentTree.Order}}>
+      <button id="changeOrderButton" (click)="changeOrder()">Ordnung Verändern</button>
+    </div>
+
+    <br/>
+
+    <div>
+      <textarea class="outPut" [(ngModel)]="consoleOutput" value="" rows="5" placeholder="> Ausgabe"></textarea>
+    </div>
+
+    <br/>
+
+    <div>
+      <button class="nextStepButton" (click)="nextStep()" disabled>Nächster Schritt</button>
+    </div>
+    <br/>
+    <div>
+      <input type="file" id="csvInput" class="inputFile" name="csvInput" (change)="uploadListener($event)" accept=".csv" />
+      <label for="csvInput" class="label">CSV Auswählen
+      </label>
+    </div>
+    <div>
+      <button class="nextStepButton" (click)="readCSV()">CSV Bestätigen</button>
+    </div>
+    <br/>
+
+  </div>
+  <div class="outer">
+    <div class="right">
+      <app-tree-display [childTree]="currentTree"></app-tree-display>
     </div>
   </div>
 
-  <br/>
-
-  <div>
-    <input id="minRandom" type="text" class="smallInput" value="" placeholder="Min">
-    <input id="maxRandom" type="text" class="smallInput" value="" placeholder="Anz.">
-    <input id="numberRandom" type="text" class="smallInput" value="" placeholder="Max">
-    <button id="addRandomButton" class="randomButton" (click)="addRandomElements()">+ Zfll.</button>
-  </div>
-
-  <br/>
-
-  <div>
-    <input type="text" class="smallInput" value="" placeholder={{currentTree.Order}}>
-    <button id="changeOrderButton" (click)="changeOrder()">Ordnung Verändern</button>
-  </div>
-
-  <br/>
-  <textarea class="outPut" value="" rows="5" placeholder="> Ausgabe"></textarea>
-  <div>
-
-  </div>
-  <br/>
-
-</div>
-<div class="outer">
-  <div class="right">
-    <app-tree-display [childTree]="currentTree"></app-tree-display>
-  </div>
-</div>

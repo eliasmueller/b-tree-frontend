@@ -9,9 +9,9 @@ import { UiComponent } from '../ui/ui.component';
   styleUrls: ['./tree-display.component.css']
 })
 
- /*
+/**
  * This class is responsible for transforming the b-tree from the JSON-Format to a visual representation in HTML using the HTML canvas.
- * */
+ */
 export class TreeDisplayComponent implements OnInit, OnChanges {
 
 
@@ -32,9 +32,10 @@ export class TreeDisplayComponent implements OnInit, OnChanges {
   constructor( private data: UiComponent) {
   }
 
-  /*
-    * On change of the tree the tree gets transformed to a Tree-Object, the canvas gets initialized and the draw-method gets called.
-    * */
+  /**
+   * On change of the tree the tree gets transformed to a Tree-Object, the canvas gets initialized and the draw-method gets called.
+   * @param changes: The changes Interface that fetches if the childTree-attribute did change.
+   */
   async ngOnChanges(changes: SimpleChanges): Promise<void> {
     if ( this.childTree !=  null ) {
       this.bTree = this.childTree;
@@ -46,9 +47,9 @@ export class TreeDisplayComponent implements OnInit, OnChanges {
 
   async ngOnInit(): Promise<void> {}
 
-  /*
-  * This method initializes the canvas based on the number of elements in the tree.
-  * */
+  /**
+   * This method initializes the canvas based on the number of elements in the tree.
+   */
   private async initCanvas(): Promise<void> {
     this.canvasHeight = this.bTree.Height * 130;
     this.canvasWidth = this.bTree.NumberLeaves * this.bTree.Order * 40 + 100;
@@ -57,15 +58,15 @@ export class TreeDisplayComponent implements OnInit, OnChanges {
     this.ctx.stroke();
   }
 
-  /*
-  * This method draws the actual representation of the tree.
-  * First, it iterates threw the arrays that describe the dimensions of the tree, and creates a rectangle for every node.
-  * Into this rectangle will be written the elements of the node, additionally the positions of the rectangle get saved.
-  *
-  * After all rectangles have been created, the edges will be drawn, based on the position of the elements, and the nodes where
-  * they are pointing to. Therefore, the method iterates over all nodes and elements of the nodes and draws a line if a left or
-  * right reference is there. The positions to draw the lines to are taken out of the node position lookup tables.
-  * */
+  /**
+   * This method draws the actual representation of the tree.
+   * First, it iterates threw the arrays that describe the dimensions of the tree, and creates a rectangle for every node.
+   * Into this rectangle will be written the elements of the node, additionally the positions of the rectangle get saved.
+   *
+   * After all rectangles have been created, the edges will be drawn, based on the position of the elements, and the nodes where
+   * they are pointing to. Therefore, the method iterates over all nodes and elements of the nodes and draws a line if a left or
+   * right reference is there. The positions to draw the lines to are taken out of the node position lookup tables.
+   */
   private async drawTree(): Promise<void> {
     let nodeIndex = 0;
     const width = this.bTree.Order * 30;
@@ -111,9 +112,9 @@ export class TreeDisplayComponent implements OnInit, OnChanges {
   }
 
 
-  /*
-  * This method extracts the first element of each row and counts the elements per row, to use this metrics for drawing the tree.
-  * */
+  /**
+   * This method extracts the first element of each row and counts the elements per row, to use this metrics for drawing the tree.
+   */
   private async getTreeMetrics(): Promise<void> {
     let i = 1;
     let j = 1;

@@ -1,9 +1,10 @@
 import { Node } from './node';
+import * as uuid from 'uuid';
 
 export class Tree {
   Order: number;
   Height: number;
   NumberLeaves: number;
-  NumberElementsInLeaves: number;
+  Highlighted: uuid;
   Nodes: Node[];
 }

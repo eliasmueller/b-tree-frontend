@@ -52,7 +52,7 @@ export class TreeDisplayComponent implements OnInit, OnChanges {
    */
   private async initCanvas(): Promise<void> {
     this.canvasHeight = this.bTree.Height * 130;
-    this.canvasWidth = this.bTree.NumberLeaves * this.bTree.Order * 40 + 100;
+    this.canvasWidth = this.bTree.NumberLeaves * (this.bTree.Order - 1) * 40 + 100;
 
     this.ctx = this.canvas.nativeElement.getContext('2d');
     this.ctx.stroke();
@@ -69,15 +69,15 @@ export class TreeDisplayComponent implements OnInit, OnChanges {
    */
   private async drawTree(): Promise<void> {
     let nodeIndex = 0;
-    const width = this.bTree.Order * 30;
+    const width = (this.bTree.Order - 1) * 32;
     for (let i = 0; i < this.bTree.Height; i++) {
       for (let j = 0; j < this.numberNodesInRow[i]; j++) {
         const x = (j * width) + (j + 1) * (((this.canvasWidth) - width * this.numberNodesInRow[i]) / (this.numberNodesInRow[i] + 1));
         const y = i * 130 + 50;
-        if ( this.bTree.Nodes[nodeIndex].Highlighted === false ) {
-          this.ctx.fillStyle = '#369';
-        } else {
+        if ( this.bTree.Highlighted === this.bTree.Nodes[nodeIndex].UUID ) {
           this.ctx.fillStyle = '#42d232';
+        } else {
+          this.ctx.fillStyle = '#369';
         }
 
         this.ctx.fillRect(x, y, width, 30);

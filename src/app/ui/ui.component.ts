@@ -39,6 +39,7 @@ export class UiComponent implements OnInit {
   constructor(private httpClient: HttpClient) {
   }
 
+  // TODO Comment the class
   ngOnInit(): void {
     // TODO REMOVE
     this.currentTree = plainToClass(Tree, ExampleTree);

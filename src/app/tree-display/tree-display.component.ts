@@ -2,6 +2,7 @@ import {Component, ElementRef, OnInit, ViewChild, Input, OnChanges, SimpleChange
 import {Tree} from '../tree';
 import {Node} from '../node';
 import { UiComponent } from '../ui/ui.component';
+import * as uuid from 'uuid';
 
 @Component({
   selector: 'app-tree-display',
@@ -19,6 +20,7 @@ export class TreeDisplayComponent implements OnInit, OnChanges {
   canvas: ElementRef<HTMLCanvasElement>;
 
   @Input() childTree: Tree;
+  @Input() highlighted: uuid;
 
   private bTree: Tree;
   canvasWidth: number;
@@ -40,7 +42,7 @@ export class TreeDisplayComponent implements OnInit, OnChanges {
     if ( this.childTree !=  null ) {
       this.bTree = this.childTree;
       await this.initCanvas();
-      await this.getTreeMetrics();
+      await this.setTreeMetrics();
       await this.drawTree();
     }
   }
@@ -68,75 +70,89 @@ export class TreeDisplayComponent implements OnInit, OnChanges {
    * right reference is there. The positions to draw the lines to are taken out of the node position lookup tables.
    */
   private async drawTree(): Promise<void> {
-    let nodeIndex = 0;
-    const width = (this.bTree.Order - 1) * 32;
-    for (let i = 0; i < this.bTree.Height; i++) {
-      for (let j = 0; j < this.numberNodesInRow[i]; j++) {
-        const x = (j * width) + (j + 1) * (((this.canvasWidth) - width * this.numberNodesInRow[i]) / (this.numberNodesInRow[i] + 1));
-        const y = i * 130 + 50;
-        if ( this.bTree.Highlighted === this.bTree.Nodes[nodeIndex].UUID ) {
-          this.ctx.fillStyle = '#42d232';
-        } else {
-          this.ctx.fillStyle = '#369';
-        }
+    if (this.bTree.Nodes != null) {
+      let nodeIndex = 0;
+      const width = (this.bTree.Order - 1) * 32;
+      for (let i = 0; i < this.bTree.Height; i++) {
+        for (let j = 0; j < this.numberNodesInRow[i]; j++) {
+          const x = (j * width) + (j + 1) * (((this.canvasWidth) - width * this.numberNodesInRow[i]) / (this.numberNodesInRow[i] + 1));
+          const y = i * 130 + 50;
+          if (this.highlighted === this.bTree.Nodes[nodeIndex].UUID) {
+            this.ctx.fillStyle = '#42d232';
+          } else {
+            this.ctx.fillStyle = '#369';
+          }
 
-        this.ctx.fillRect(x, y, width, 30);
+          this.ctx.fillRect(x, y, width, 30);
 
-        this.nodeXPositionLookupTable[nodeIndex] = x;
-        this.nodeYPositionLookupTable[nodeIndex] = y;
+          this.nodeXPositionLookupTable[nodeIndex] = x;
+          this.nodeYPositionLookupTable[nodeIndex] = y;
 
-        this.ctx.fillStyle = 'white';
-        this.ctx.font = '25px helvetica';
-        for (let k = 0; k < this.bTree.Nodes[nodeIndex].Elements.length; k++) {
-          this.ctx.fillText(String(this.bTree.Nodes[nodeIndex].Elements[k].Value), x + 5 + k * 30, y + 23, 25);
-        }
-        ++nodeIndex;
-      }
-    }
-    this.ctx.fillStyle = 'black';
-    for (let i = 0; i < this.bTree.Nodes.length; i++) {
-      for (let k = 0; k < this.bTree.Nodes[i].Elements.length; k++) {
-        if (this.bTree.Nodes[i].Elements[k].Left != null) {
-          this.ctx.moveTo(this.nodeXPositionLookupTable[i] + 5 + k * 30, this.nodeYPositionLookupTable[i] + 30);
-          const endNodeIndex = this.bTree.Nodes.findIndex(n => n.UUID === this.bTree.Nodes[i].Elements[k].Left);
-          this.ctx.lineTo(this.nodeXPositionLookupTable[endNodeIndex] + width / 2, this.nodeYPositionLookupTable[endNodeIndex]);
-        }
-        if (this.bTree.Nodes[i].Elements[k].Right != null) {
-          this.ctx.moveTo(this.nodeXPositionLookupTable[i] + 35 + k * 30, this.nodeYPositionLookupTable[i] + 30);
-          const endNodeIndex = this.bTree.Nodes.findIndex(n => n.UUID === this.bTree.Nodes[i].Elements[k].Right);
-          this.ctx.lineTo(this.nodeXPositionLookupTable[endNodeIndex] + width / 2, this.nodeYPositionLookupTable[endNodeIndex]);
+          this.ctx.fillStyle = 'white';
+          this.ctx.font = '25px helvetica';
+          for (let k = 0; k < this.bTree.Nodes[nodeIndex].Elements.length; k++) {
+            this.ctx.fillText(String(this.bTree.Nodes[nodeIndex].Elements[k].Value), x + 5 + k * 30, y + 23, 25);
+          }
+          ++nodeIndex;
         }
       }
+      this.ctx.fillStyle = 'black';
+      for (let i = 0; i < this.bTree.Nodes.length; i++) {
+        for (let k = 0; k < this.bTree.Nodes[i].Elements.length; k++) {
+          if (this.bTree.Nodes[i].Elements[k].Left != null) {
+            this.ctx.moveTo(this.nodeXPositionLookupTable[i] + 5 + k * 30, this.nodeYPositionLookupTable[i] + 30);
+            const endNodeIndex = this.bTree.Nodes.findIndex(n => n.UUID === this.bTree.Nodes[i].Elements[k].Left);
+            this.ctx.lineTo(this.nodeXPositionLookupTable[endNodeIndex] + width / 2, this.nodeYPositionLookupTable[endNodeIndex]);
+          }
+          if (this.bTree.Nodes[i].Elements[k].Right != null) {
+            this.ctx.moveTo(this.nodeXPositionLookupTable[i] + 35 + k * 30, this.nodeYPositionLookupTable[i] + 30);
+            const endNodeIndex = this.bTree.Nodes.findIndex(n => n.UUID === this.bTree.Nodes[i].Elements[k].Right);
+            this.ctx.lineTo(this.nodeXPositionLookupTable[endNodeIndex] + width / 2, this.nodeYPositionLookupTable[endNodeIndex]);
+          }
+        }
+      }
+      this.ctx.stroke();
     }
-    this.ctx.stroke();
   }
 
 
   /**
    * This method extracts the first element of each row and counts the elements per row, to use this metrics for drawing the tree.
    */
-  private async getTreeMetrics(): Promise<void> {
-    let i = 1;
-    let j = 1;
-    let k = 1;
-    if (this.bTree.Nodes.length > 0) {
-      // Adding the root
-      this.firstElementsInRow[0] = this.bTree.Nodes[0];
+  private async setTreeMetrics(): Promise<void> {
+    this.resetTreeMetrics();
 
-      if (this.bTree.Nodes.length > 1) {
-        while (this.bTree.Nodes[j - 1].Elements[0].Left != null) {
-          if (this.firstElementsInRow[i - 1].Elements[0].Left === this.bTree.Nodes[j].UUID) {
-            this.firstElementsInRow.push(this.bTree.Nodes[j]);
-            this.numberNodesInRow[i - 1] = k;
-            ++i;
-            k = 0;
+    let i = 0; // RowIterator
+    let j = 1; // NodeIterator
+    let k = 1;
+    if (this.bTree.Nodes != null) {
+      if (this.bTree.Nodes.length > 0) {
+        // Adding the root
+        this.firstElementsInRow[0] = this.bTree.Nodes[0];
+
+        if (this.bTree.Nodes.length > 1) {
+          while (this.bTree.Nodes[j - 1].Elements[0].Left != null) {
+            // Start new row
+            if (this.firstElementsInRow[i].Elements[0].Left === this.bTree.Nodes[j].UUID) {
+              this.firstElementsInRow.push(this.bTree.Nodes[j]);
+              this.numberNodesInRow[i] = k;
+              ++i;
+              k = 0;
+            }
+            ++j;
+            ++k;
           }
-          ++j;
-          ++k;
+          this.numberNodesInRow.push(this.bTree.NumberLeaves);
+        } else {
+          this.numberNodesInRow.push(1);
         }
-        this.numberNodesInRow.push(this.bTree.NumberLeaves);
       }
     }
+  }
+
+  private resetTreeMetrics(): void {
+    this.numberNodesInRow = [];
+    this.firstElementsInRow = [];
   }
 }
 

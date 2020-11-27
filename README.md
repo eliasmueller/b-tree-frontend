@@ -3,6 +3,11 @@
 ## Installation
 To make this project work, you also need the b-tree-backend provided in this [link to the backend!](https://github.com/julian-stein/b-tree-backend)
 
+TBD. Installation Command for the docker container:
+```
+docker run --name b-tree-frontend-app-container -d -p 4200:80 b-tree-frontend-app-image
+```
+
 ## Function Description Frontend
 This frontend provides a basic HTML/CSS UI for editing the B-Tree provided in the backend.
 It works as an angular application communicating over http-RPCs with the backend.

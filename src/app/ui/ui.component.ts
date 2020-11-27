@@ -137,7 +137,7 @@ export class UiComponent implements OnInit {
         if (this.currentTree.Nodes.length < 1) {
           this.initUi();
         }
-        this.consoleOutput = this.consoleOutput + 'Die Ordnung wurde zu ' + this.currentTree.Order + 'verändert';
+        this.consoleOutput = this.consoleOutput + 'Die Ordnung wurde zu ' + this.currentTree.Order + ' verändert.';
       }
 
       /* true when no element could be added/removed */
@@ -206,7 +206,7 @@ export class UiComponent implements OnInit {
       return;
     }
 
-    if (randomValues[2] - randomValues[0] <= randomValues[1]) {
+    if (randomValues[2] - randomValues[0] + 1 < randomValues[1]) {
       this.consoleOutput = 'Da Duplikate verboten sind, können für diese Min-Max-Range nur '
         + (randomValues[2] - randomValues[0] + 1) + ' Zufallswerte generiert werden.\n';
     }
@@ -233,7 +233,7 @@ export class UiComponent implements OnInit {
     }
 
     const answer = this.httpClient.post(this.url + '/changeOrder', orderValue);
-    this.resolveAddDeleteHttpRequest(answer);
+    this.resolveAddDeleteHttpRequest(answer, false, true);
   }
 
   /**

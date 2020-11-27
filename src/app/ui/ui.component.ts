@@ -44,6 +44,7 @@ export class UiComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.resetTreeInBackend();
     this.initUi();
   }
 
@@ -84,7 +85,7 @@ export class UiComponent implements OnInit {
     }
 
     const answer = this.httpClient.request('delete', this.url + '', {body: numberArray});
-    this.resolveAddDeleteHttpRequest(answer);
+    this.resolveAddDeleteHttpRequest(answer, true);
   }
 
   /**
@@ -95,9 +96,10 @@ export class UiComponent implements OnInit {
    * If the treeArray contains more than one element, this method calls the disableAllButtonsButNextStep()-method,
    * which disables all UI-Elements but the next step button to iterate over the single adding / removing steps.
    *
-   * @param answer: The Observable observing the http request.
+   * @param answer: The Observable<any> observing the http request.
+   * @param deleted: Boolean, whether delete or add method calls this method.
    */
-  private resolveAddDeleteHttpRequest(answer: Observable<any>): void {
+  private resolveAddDeleteHttpRequest(answer: Observable<any>, deleted: boolean = false): void {
     this.load = true;
     answer.pipe(timeout(this.timeoutInterval), catchError(() => {
       this.consoleOutput = 'Verbindung fehlgeschlagen';
@@ -107,14 +109,23 @@ export class UiComponent implements OnInit {
       this.load = false;
       this.enableAllButtonsButNextStep();
       this.treeArray = data;
+      const verbString = deleted ? 'gelöscht.' : 'eingefügt.';
       if (this.treeArray.length > 1) {
         this.currentTree = this.treeArray[0] as Tree;
         if (this.currentTree.Nodes.length < 1) {
           this.initUi();
         }
+        this.consoleOutput = this.consoleOutput + 'Es werden ' + this.treeArray.length + ' Element ' + verbString;
         this.disableAllButtonsButNextStep();
-      } else {
-        this.currentTree = plainToClass(Tree, this.treeArray[0]);
+      } else if (this.treeArray.length === 1) {
+        this.currentTree = this.treeArray[0] as Tree;
+        if (this.currentTree.Nodes.length < 1) {
+          this.initUi();
+        }
+        this.consoleOutput = this.consoleOutput + 'Es wird 1 Element ' + verbString;
+      }
+      else {
+        this.consoleOutput = this.consoleOutput + 'Es wurden keine Elemente ' + verbString;
       }
     });
   }
@@ -178,9 +189,9 @@ export class UiComponent implements OnInit {
       return;
     }
 
-    if (randomValues[2] - randomValues[0] < randomValues[1]) {
+    if (randomValues[2] - randomValues[0] <= randomValues[1]) {
       this.consoleOutput = 'Da Duplikate verboten sind, können für diese Min-Max-Range nur '
-        + (randomValues[2] - randomValues[0]) + ' Zufallswerte generiert werden.';
+        + (randomValues[2] - randomValues[0] + 1) + ' Zufallswerte generiert werden.\n';
     }
 
     const answer = this.httpClient.post(this.url + '/random', randomValues);
@@ -221,7 +232,7 @@ export class UiComponent implements OnInit {
 
     this.currentTree = this.treeArray[this.arrayIterator];
     this.arrayIterator++;
-    if (this.arrayIterator === this.treeArray.length) {
+    if (this.arrayIterator >= this.treeArray.length) {
       this.enableAllButtonsButNextStep();
       this.arrayIterator = 1;
     }
@@ -296,12 +307,19 @@ export class UiComponent implements OnInit {
     this.csvReader.nativeElement.value = '';
   }
 
-  /**
-   * Changes the currentTree Attribute.
-   * @param tree: The new Tree.
-   */
-  changeTree(tree: Tree): void {
-    this.currentTree = tree;
+  private resetTreeInBackend(): void {
+    this.consoleOutput = '';
+    this.highlighted = null;
+
+    const answer = this.httpClient.get(this.url + '/reset');
+    answer.pipe(timeout(this.timeoutInterval), catchError(() => {
+      this.consoleOutput = 'Verbindung fehlgeschlagen.';
+      this.load = false;
+      return answer;
+    })).subscribe((data) => {
+        this.load = false;
+        this.consoleOutput = 'Verbindung hergestellt.';
+      });
   }
 
   /**
@@ -398,4 +416,6 @@ export class UiComponent implements OnInit {
     button[2].disabled = true;
 
   }
+
+
 }

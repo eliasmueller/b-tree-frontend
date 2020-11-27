@@ -99,7 +99,7 @@ export class UiComponent implements OnInit {
    * @param answer: The Observable<any> observing the http request.
    * @param deleted: Boolean, whether delete or add method calls this method.
    */
-  private resolveAddDeleteHttpRequest(answer: Observable<any>, deleted: boolean = false): void {
+  private resolveAddDeleteHttpRequest(answer: Observable<any>, deleted: boolean = false, changedOrder = false): void {
     this.load = true;
     answer.pipe(timeout(this.timeoutInterval), catchError(() => {
       this.consoleOutput = 'Verbindung fehlgeschlagen';
@@ -117,12 +117,18 @@ export class UiComponent implements OnInit {
         }
         this.consoleOutput = this.consoleOutput + 'Es werden ' + this.treeArray.length + ' Element ' + verbString;
         this.disableAllButtonsButNextStep();
-      } else if (this.treeArray.length === 1) {
+      } else if (this.treeArray.length === 1 && !changedOrder) {
         this.currentTree = this.treeArray[0] as Tree;
         if (this.currentTree.Nodes.length < 1) {
           this.initUi();
         }
         this.consoleOutput = this.consoleOutput + 'Es wird 1 Element ' + verbString;
+      } else if (changedOrder) {
+        this.currentTree = this.treeArray[0] as Tree;
+        if (this.currentTree.Nodes.length < 1) {
+          this.initUi();
+        }
+        this.consoleOutput = this.consoleOutput + 'Die Ordnung wurde zu ' + this.currentTree.Order + 'verändert';
       }
       else {
         this.consoleOutput = this.consoleOutput + 'Es wurden keine Elemente ' + verbString;

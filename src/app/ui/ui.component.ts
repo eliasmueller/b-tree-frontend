@@ -98,6 +98,7 @@ export class UiComponent implements OnInit {
    *
    * @param answer: The Observable<any> observing the http request.
    * @param deleted: Boolean, whether delete or add method calls this method.
+   * @param changedOrder: Boolean, wheter changeOrder called this method.
    */
   private resolveAddDeleteHttpRequest(answer: Observable<any>, deleted: boolean = false, changedOrder = false): void {
     this.load = true;
@@ -110,6 +111,8 @@ export class UiComponent implements OnInit {
       this.enableAllButtonsButNextStep();
       this.treeArray = data;
       const verbString = deleted ? 'gelöscht.' : 'eingefügt.';
+
+      /* true, when more than one element got added/removed */
       if (this.treeArray.length > 1) {
         this.currentTree = this.treeArray[0] as Tree;
         if (this.currentTree.Nodes.length < 1) {
@@ -117,19 +120,27 @@ export class UiComponent implements OnInit {
         }
         this.consoleOutput = this.consoleOutput + 'Es werden ' + this.treeArray.length + ' Element ' + verbString;
         this.disableAllButtonsButNextStep();
-      } else if (this.treeArray.length === 1 && !changedOrder) {
+      }
+
+      /* true when one element gets added/removed */
+      else if (this.treeArray.length === 1 && !changedOrder) {
         this.currentTree = this.treeArray[0] as Tree;
         if (this.currentTree.Nodes.length < 1) {
           this.initUi();
         }
         this.consoleOutput = this.consoleOutput + 'Es wird 1 Element ' + verbString;
-      } else if (changedOrder) {
+      }
+
+      /* true when changeOrder called this method */
+      else if (changedOrder) {
         this.currentTree = this.treeArray[0] as Tree;
         if (this.currentTree.Nodes.length < 1) {
           this.initUi();
         }
         this.consoleOutput = this.consoleOutput + 'Die Ordnung wurde zu ' + this.currentTree.Order + 'verändert';
       }
+
+      /* true when no element could be added/removed */
       else {
         this.consoleOutput = this.consoleOutput + 'Es wurden keine Elemente ' + verbString;
       }

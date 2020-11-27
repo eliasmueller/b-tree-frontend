@@ -1,27 +1,53 @@
-# BTreeFrontend
+# BTreeFrontend - Angular application
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 11.0.2.
+## Installation
+To make this project work, you also need the b-tree-backend provided in this [link to the backend!](https://github.com/julian-stein/b-tree-backend)
 
-## Development server
+## Function Description Frontend
+This frontend provides a basic HTML/CSS UI for editing the B-Tree provided in the backend.
+It works as an angular application communicating over http-RPCs with the backend.
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
+### Description of the UI
+The UI contains basic HTML-buttons and input-fields to add/delete elements from the tree.
+This can be done either by providing a comma-seperated list in the input field,
+by adding them randomly with providing min, max and number of values, or by reading a 
+CSV-File, containing comma-seperated values.
+These values all must be integers and larger than 0.
 
-## Code scaffolding
+### Description of the tree visualisation.
+The visualisation of the b-tree is a HTML-canvas, with size calculated on the trees metrics.
+It contains rectangles and lines representing the nodes and edges of the tree.
+It gets created, everytime a new tree is loaded as the current-tree and gets drawn
+by iterating over the level-ordered node elements.
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
 
-## Build
+![Level-ordered tree](https://upload.wikimedia.org/wikipedia/commons/d/d1/Sorted_binary_tree_breadth-first_traversal.svg)
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory. Use the `--prod` flag for a production build.
+It has to be noticed that if the user adds/removes more than one element at once,
+the endpoints will return a list of trees and the user has to manually iterate over them,
+via clicking the 'Next step' button, which will cause the frontend-logic to use the next 
+tree of the array as current tree and to draw it.
 
-## Running unit tests
+### Description of the RPCs
+The RPC communication bases on plain http-calls. The backend endpoints consume and return specific data,
+as defined in the API-definition below.
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+/api (POST)
+consumes: [int] (the positive integers representing the new elements to be added)
+returns: [JSON] (an array that represents of the steps of adding the new elements)
 
-## Running end-to-end tests
+/api (DELETE)
+consumes: [int] (the positive integers representing the  elements to be removed)
+returns: [JSON] (an array that represents the steps of removing the elements)
 
-Run `ng e2e` to execute the end-to-end tests via [Protractor](http://www.protractortest.org/).
+/api/search (POST)
+consumes: int (the element to search after)
+returns: {"Highlighted": UUID, "Costs": int} (json-object representing the highlighted node (where the element is) and the costs of searching the element)
 
-## Further help
+/api/random (POST)
+consumes: [int] (min, number, max: integers representing the metrics for adding new random elements)
+returns: [JSON] (an array that represents the steps of removing the elements)
 
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
+/api/changeOrder (POST)
+consumes: int
+returns: [JSON] (an array that represents the steps of removing the elements)

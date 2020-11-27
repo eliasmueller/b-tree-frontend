@@ -83,7 +83,7 @@ export class UiComponent implements OnInit {
       return;
     }
 
-    const answer = this.httpClient.request('delete', this.url + '', {body: numberArray} );
+    const answer = this.httpClient.request('delete', this.url + '', {body: numberArray});
     this.resolveAddDeleteHttpRequest(answer);
   }
 
@@ -173,6 +173,16 @@ export class UiComponent implements OnInit {
       return;
     }
 
+    if (randomValues[2] < randomValues[0]) {
+      this.consoleOutput = 'Das Maximum muss größer als das Minimum sein';
+      return;
+    }
+
+    if (randomValues[2] - randomValues[0] < randomValues[1]) {
+      this.consoleOutput = 'Da Duplikate verboten sind, können für diese Min-Max-Range nur '
+        + (randomValues[2] - randomValues[0]) + ' Zufallswerte generiert werden.';
+    }
+
     const answer = this.httpClient.post(this.url + '/random', randomValues);
 
     this.resolveAddDeleteHttpRequest(answer);
@@ -225,7 +235,7 @@ export class UiComponent implements OnInit {
     this.consoleOutput = '';
     this.highlighted = null;
 
-    if ( this.csvValues[0] == null ) {
+    if (this.csvValues[0] == null) {
       this.consoleOutput = 'Keine korrekten Daten aus einer CSV eingelesen.';
       return;
     }

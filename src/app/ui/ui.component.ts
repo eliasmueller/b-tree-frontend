@@ -228,12 +228,14 @@ export class UiComponent implements OnInit {
     const temp = this.orderInput.match(/\d+/g);
     const orderValue = this.matchInput(temp);
 
-    if (orderValue === null || orderValue === 0) {
+    if (orderValue === null) {
       return;
+    } else if (orderValue < 3) {
+      this.consoleOutput = 'Die Ordnung muss mindestens 3 betragen!';
+    } else {
+      const answer = this.httpClient.post(this.url + '/changeOrder', orderValue);
+      this.resolveAddDeleteHttpRequest(answer, false, true);
     }
-
-    const answer = this.httpClient.post(this.url + '/changeOrder', orderValue);
-    this.resolveAddDeleteHttpRequest(answer, false, true);
   }
 
   /**

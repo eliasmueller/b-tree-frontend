@@ -40,7 +40,7 @@ docker run -d -p 4200:80 --name b-tree-frontend-app-container eliasmueller/b-tre
 docker run -d -p 8080:8080 --name b-tree-backend-app-container steinju/b-tree-backend:latest
 
 ```
-After running them, open a browser page at **localhost:4200** to open the 
+After running them, open a browser page at **localhost:4200** to open the application.
 
 ## Function Description Frontend
 This frontend provides a basic HTML/CSS UI for editing the B-Tree provided in the backend.

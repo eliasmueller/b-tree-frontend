@@ -5,7 +5,7 @@ To make this project work, you also need the b-tree-backend provided in this [li
 
 TBD. Installation Command for the docker container:
 ```
-docker run -d -p 4200:80 --name b-tree-frontend-app-container emueller/b-tree-frontend:latest
+docker run -d -p 4200:80 --name b-tree-frontend-app-container eliasmueller/b-tree-frontend:latest
 ```
 
 ## Function Description Frontend

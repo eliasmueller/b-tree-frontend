@@ -6,7 +6,7 @@ The application is meant to be used locally, which is why the connection only wo
 
 First of all, you have to install a local [Docker environment](https://www.docker.com/get-started) to your machine, if you have none installed already.
 
-Next, there are two ways to install the Docker containers.
+Next, there are two ways to run the Docker containers.
 
 1. You can create a directory on your machine called 'b-tree', and create a file called 'docker-compose.yml'. 
 Into this docker compose file you have to paste the script below and save it.
@@ -26,8 +26,7 @@ services:
     ports: 
       - 4200:80
     depends_on:
-      - b-tree-backend
-      
+      - b-tree-backend  
 ```
 Out of the newly created dir 'b-tree' run the following docker command:
 ```
@@ -36,9 +35,8 @@ docker-compose up
 
 2. You can also run the two commands and fetch and run the Docker repositories yourself:
 ```
-docker run -d -p 4200:80 --name b-tree-frontend-app-container eliasmueller/b-tree-frontend:latest
 docker run -d -p 8080:8080 --name b-tree-backend-app-container steinju/b-tree-backend:latest
-
+docker run -d -p 4200:80 --name b-tree-frontend-app-container eliasmueller/b-tree-frontend:latest
 ```
 After running them, open a browser page at **localhost:4200** to open the application.
 

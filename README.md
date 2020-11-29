@@ -51,6 +51,10 @@ by adding them randomly with providing min, max and number of values, or by read
 CSV-File, containing comma-seperated values.
 These values all must be integers and larger than 0.
 
+Annotation: Any input field will be able to consume comma-seperated number-characters (0-9),
+if you try to insert negative values, the character '-' will be stripped and the absolute value
+of the number will be inserted.
+
 ### Description of the tree visualisation.
 The visualisation of the b-tree is a HTML-canvas, with size calculated on the tree's metrics.
 It contains rectangles and lines representing the nodes and edges of the tree.

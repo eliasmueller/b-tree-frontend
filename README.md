@@ -1,7 +1,7 @@
 # BTreeFrontend - Angular application
 
 ## Installation
-To make this project work, you also need the b-tree-backend provided in this [link to the backend!](https://github.com/julian-stein/b-tree-backend)
+To make this project work, you also need the b-tree-backend provided in this [repsoitory!](https://github.com/julian-stein/b-tree-backend)
 The application is meant to be used locally, which is why the connection only works via localhost and if the to containers are running on the same machine.
 
 First of all, you have to install a local [Docker environment](https://www.docker.com/get-started) to your machine, if you have none installed already.

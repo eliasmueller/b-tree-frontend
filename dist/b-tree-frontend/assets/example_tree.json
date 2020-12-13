@@ -1,0 +1,114 @@
+{
+    "Order": 4,
+    "Height": 3,
+    "NumberLeaves": 6,
+    "Highlighted": null,
+    "Nodes": [
+        {
+            "UUID": "fa7a9555-af5a-48fb-875b-21b8f489cb21",
+            "Elements": [
+                {
+                    "Value": 9,
+                    "Left": "9491dbcf-8788-4d48-9e10-34b09181a646",
+                    "Right": "96bbb64a-a295-41de-972f-22ec0cfe076b"
+                }
+            ]
+        },
+        {
+            "UUID": "9491dbcf-8788-4d48-9e10-34b09181a646",
+            "Elements": [
+                {
+                    "Value": 3,
+                    "Left": "44cdc82c-f32d-4e9f-9b74-e9e754705d80",
+                    "Right": "d17e3ec4-48b7-4a08-aebb-d37471bc6b9d"
+                },
+                {
+                    "Value": 6,
+                    "Left": "d17e3ec4-48b7-4a08-aebb-d37471bc6b9d",
+                    "Right": "6b30d2e9-6c8c-4065-a040-65b507dfa0fc"
+                }
+            ]
+        },
+        {
+            "UUID": "96bbb64a-a295-41de-972f-22ec0cfe076b",
+            "Elements": [
+                {
+                    "Value": 12,
+                    "Left": "917c1edd-9f4e-46a6-acd6-5a3d3e440eb6",
+                    "Right": "997f0d93-8681-4047-9ae7-892f6ffa4f6a"
+                },
+                {
+                    "Value": 15,
+                    "Left": "997f0d93-8681-4047-9ae7-892f6ffa4f6a",
+                    "Right": "e0473fd3-bbb4-4676-979b-cc898692be38"
+                }
+            ]
+        },
+        {
+            "UUID": "44cdc82c-f32d-4e9f-9b74-e9e754705d80",
+            "Elements": [
+                {
+                    "Value": 1
+                },
+                {
+                    "Value": 2
+                }
+            ]
+        },
+        {
+            "UUID": "d17e3ec4-48b7-4a08-aebb-d37471bc6b9d",
+            "Elements": [
+                {
+                    "Value": 4
+                },
+                {
+                    "Value": 5
+                }
+            ]
+        },
+        {
+            "UUID": "6b30d2e9-6c8c-4065-a040-65b507dfa0fc",
+            "Elements": [
+                {
+                    "Value": 7
+                },
+                {
+                    "Value": 8
+                }
+            ]
+        },
+        {
+            "UUID": "917c1edd-9f4e-46a6-acd6-5a3d3e440eb6",
+            "Elements": [
+                {
+                    "Value": 10
+                },
+                {
+                    "Value": 11
+                }
+            ]
+        },
+        {
+            "UUID": "997f0d93-8681-4047-9ae7-892f6ffa4f6a",
+            "Elements": [
+                {
+                    "Value": 13
+                },
+                {
+                    "Value": 14
+                }
+            ]
+        },
+        {
+            "UUID": "e0473fd3-bbb4-4676-979b-cc898692be38",
+            "Elements": [
+                {
+                    "Value": 16
+                },
+                {
+                    "Value": 17
+                }
+            ]
+        }
+    ]
+}

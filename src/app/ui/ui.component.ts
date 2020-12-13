@@ -1,7 +1,6 @@
 import {Component, Injectable, OnInit, ViewChild} from '@angular/core';
 import {Observable} from 'rxjs';
 import {HttpClient} from '@angular/common/http';
-import {plainToClass} from 'class-transformer';
 import {Tree} from '../tree';
 import * as uuid from 'uuid';
 
@@ -28,9 +27,13 @@ export class UiComponent implements OnInit {
   minRandomInput = '';
   maxRandomInput = '';
   numberRandomInput = '';
+  sleepTimeInput = '';
   orderInput = '';
   consoleOutput = '';
+
+  private verbString = '';
   private csvValues = [];
+  private values = [];
 
   public highlighted: uuid;
   public load = false;
@@ -38,7 +41,7 @@ export class UiComponent implements OnInit {
   public currentTree = new Tree();
 
   private treeArray = [];
-  private arrayIterator = 1;
+  private arrayIterator = 0;
 
   constructor(private httpClient: HttpClient) {
   }
@@ -46,6 +49,7 @@ export class UiComponent implements OnInit {
   ngOnInit(): void {
     this.resetTreeInBackend();
     this.initUi();
+    this.currentTree.Order = 5;
   }
 
   /**
@@ -107,18 +111,20 @@ export class UiComponent implements OnInit {
       this.load = false;
       return answer;
     })).subscribe(data => {
+
       this.load = false;
       this.enableAllButtonsButNextStep();
-      this.treeArray = data;
-      const verbString = deleted ? 'gelöscht.' : 'eingefügt.';
+      this.treeArray = JSON.parse(data.Trees);
+      this.values = JSON.parse(data.Values);
+      this.verbString = deleted ? 'gelöscht.' : 'eingefügt.';
 
       /* true, when more than one element got added/removed */
       if (this.treeArray.length > 1) {
-        this.currentTree = this.treeArray[0] as Tree;
-        if (this.currentTree.Nodes.length < 1) {
-          this.initUi();
+        if (this.consoleOutput !== '') {
+          this.consoleOutput = this.consoleOutput + '\n' + this.values[this.arrayIterator] + ' wird ' + this.verbString;
+        } else {
+          this.consoleOutput = this.values[this.arrayIterator] + ' wird ' + this.verbString;
         }
-        this.consoleOutput = this.consoleOutput + 'Es werden ' + this.treeArray.length + ' Element ' + verbString;
         this.disableAllButtonsButNextStep();
       }
 
@@ -128,7 +134,6 @@ export class UiComponent implements OnInit {
         if (this.currentTree.Nodes.length < 1) {
           this.initUi();
         }
-        this.consoleOutput = this.consoleOutput + 'Es wird 1 Element ' + verbString;
       }
 
       /* true when changeOrder called this method */
@@ -142,7 +147,7 @@ export class UiComponent implements OnInit {
 
       /* true when no element could be added/removed */
       else {
-        this.consoleOutput = this.consoleOutput + 'Es wurden keine Elemente ' + verbString;
+        this.consoleOutput = this.consoleOutput + 'Es wurden keine Elemente ' + this.verbString;
       }
     });
   }
@@ -174,11 +179,15 @@ export class UiComponent implements OnInit {
       return answer;
     })).subscribe((data) => {
       this.load = false;
-      if (data['Highlighted'] === null) {
-        this.consoleOutput = 'Nicht gefunden.\nKosten:' + data['Costs'];
+      // @ts-ignore
+      if (data.Highlighted === null) {
+        // @ts-ignore
+        this.consoleOutput = 'Nicht gefunden.\nKosten:' + data.Costs;
       } else {
-        this.consoleOutput = 'Gefunden.\nKosten:' + data['Costs'];
-        this.highlighted = data['Highlighted'];
+        // @ts-ignore
+        this.consoleOutput = 'Gefunden.\nKosten:' + data.Costs;
+        // @ts-ignore
+        this.highlighted = data.Highlighted;
       }
     });
   }
@@ -239,13 +248,16 @@ export class UiComponent implements OnInit {
   }
 
   /**
-   * This method gets called when the nextStep-UI-Button is pressed. It iterates over the treeArray and sets the currentTree-Attribute
+   * This method gets called when the nextStep-UI-Button is pressed or through the nextStepAutomation-Function.
+   * It iterates over the treeArray and sets the currentTree-Attribute
    * to the value of the treeArray, the iterator is on, what calls a refresh of the visual tree-representation in the
    * tree-display.component.ts-class, where the currentTree is injected into.
    * This method has to be called as many times as the treeArrays length, to call the
    * enableAllButtonsButNextStep()-method and enable the UI-Elements again.
+   *
+   * @param calledFromAuto: Boolean that represents if method was called manually or from automation
    */
-  public nextStep(): void {
+  public nextStep(calledFromAuto = false): void {
     this.consoleOutput = '';
     this.highlighted = null;
 
@@ -253,9 +265,56 @@ export class UiComponent implements OnInit {
     this.arrayIterator++;
     if (this.arrayIterator >= this.treeArray.length) {
       this.enableAllButtonsButNextStep();
-      this.arrayIterator = 1;
+      this.consoleOutput = this.treeArray.length + ' Werte wurden ' + this.verbString;
+      if (!calledFromAuto) {
+        this.arrayIterator = 0;
+      }
+      if (this.currentTree.Nodes.length < 1) {
+        this.initUi();
+      }
+      return;
+    }
+    this.consoleOutput = this.values[this.arrayIterator] + ' wird ' + this.verbString;
+  }
+
+  /**
+   * This method calls the nextStep()-Method automatically and periodically to add all new elements automated.
+   * Global sleepTimeInput-Variable defines how long the UI waits between adding a new element.
+   * If sleepTimeInput is 0, it just skips the iterative adding and sets the currentTree to the last element of the treeArray.
+   */
+  public async nextStepAutomation(): Promise<void> {
+
+    let sleepTime;
+    if (this.sleepTimeInput !== '') {
+      this.sleepTimeInput = this.sleepTimeInput.replace(/ /g, '');
+      const temp = this.sleepTimeInput.match(/\d+/g);
+      sleepTime = this.matchInput(temp);
+    } else {
+      sleepTime = 0;
+    }
+
+    if (sleepTime > 0) {
+      while (this.arrayIterator < this.treeArray.length) {
+        this.nextStep(true);
+        await this.delay(sleepTime);
+      }
+      this.arrayIterator = 0;
+    } else {
+      this.currentTree = this.treeArray[this.treeArray.length - 1];
+      this.consoleOutput = this.treeArray.length + ' Werte wurden ' + this.verbString;
+      this.enableAllButtonsButNextStep();
+      this.arrayIterator = 0;
     }
   }
+
+  /**
+   * Works as a asynchronous wait method
+   * @param ms: the time to wait
+   */
+  public async delay(ms: number): Promise<any> {
+    return new Promise( resolve => setTimeout(resolve, ms) );
+  }
+
 
   /**
    * This method gets called when CSV already has been read and creates the http-request to add the csv-files values to the tree.
@@ -370,11 +429,11 @@ export class UiComponent implements OnInit {
 
     this.maxRandomInput = this.maxRandomInput.replace(/ /g, '');
     temp = this.maxRandomInput.match(/\d+/g);
-    inputValues[1] = this.matchInput(temp);
+    inputValues[2] = this.matchInput(temp);
 
     this.numberRandomInput = this.numberRandomInput.replace(/ /g, '');
     temp = this.numberRandomInput.match(/\d+/g);
-    inputValues[2] = this.matchInput(temp);
+    inputValues[1] = this.matchInput(temp);
 
     this.numberRandomInput = '';
     this.minRandomInput = '';
@@ -397,7 +456,7 @@ export class UiComponent implements OnInit {
   }
 
   /**
-   * Disables all UI-Elements but the NextStepButton.
+   * Disables all UI-Elements but the NextStepButton, The Auto-Step-Button and the sleepTimeInputButton.
    */
   private disableAllButtonsButNextStep(): void {
     const button = document.querySelectorAll('button');
@@ -409,10 +468,12 @@ export class UiComponent implements OnInit {
       input[i].disabled = true;
     }
     button[button.length - 2].disabled = false;
+    button[button.length - 3].disabled = false;
+    input[input.length - 2].disabled = false;
   }
 
   /**
-   * Enables all UI-Element but the NextStepButton.
+   * Enables all UI-Element but the NextStepButton, The Auto-Step-Button and the sleepTimeInputButton.
    */
   private enableAllButtonsButNextStep(): void {
     const button = document.querySelectorAll('button');
@@ -424,6 +485,8 @@ export class UiComponent implements OnInit {
       input[i].disabled = false;
     }
     button[button.length - 2].disabled = true;
+    button[button.length - 3].disabled = true;
+    input[input.length - 2].disabled = true;
   }
 
   /**

@@ -25,6 +25,11 @@
   width: 202px;
   padding: 2px 2px;
 }
+.sleepInput{
+  height: 14px;
+  width: 59px;
+  padding: 2px 2px;
+}
 .left {
   min-width: 250px;
   position: fixed;

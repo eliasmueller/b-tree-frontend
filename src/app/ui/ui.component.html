@@ -20,9 +20,8 @@
 
     <div>
       <input id="minRandom" [(ngModel)]="minRandomInput" type="text" class="smallInput" value="" placeholder="Min">
-      <input id="maxRandom" [(ngModel)]="maxRandomInput" type="text" class="smallInput" value="" placeholder="Anz.">
-      <input id="numberRandom" [(ngModel)]="numberRandomInput" type="text" class="smallInput" value=""
-             placeholder="Max">
+      <input id="maxRandom" [(ngModel)]="maxRandomInput" type="text" class="smallInput" value="" placeholder="Max">
+      <input id="numberRandom" [(ngModel)]="numberRandomInput" type="text" class="smallInput" value="" placeholder="Anz">
       <button id="addRandomButton" class="randomButton" (click)="addRandomElements()">+ Zfll.</button>
     </div>
 
@@ -44,6 +43,10 @@
 
     <div>
       <button class="nextStepButton" (click)="nextStep()" disabled>Nächster Schritt</button>
+    </div>
+    <div>
+      <button class="searchButton" (click)="nextStepAutomation()" disabled>Auto-Step</button>
+      <input type="text" id="sleepTimeInput" [(ngModel)]="sleepTimeInput" class="sleepInput" value = "" placeholder="0ms" disabled>
     </div>
     <br/>
     <div>
